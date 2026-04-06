@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Support\Notifies;
-use App\Models\Banner;
+use App\Models\Banners;
 
 class BannerController extends Controller
 {
@@ -24,10 +24,20 @@ class BannerController extends Controller
             FROM banners
             ORDER BY id DESC
         ");
+            
+        $sobre_rows = DB::select("
+            SELECT id, image, title, text
+            FROM sobre
+            ORDER BY id ASC
+            LIMIT 1
+        ");
+        $sobre = isset($sobre_rows[0]) ? $sobre_rows[0] : null;
 
         return view('site.home', [
-            'banners' => $banners
+            'banners' => $banners,
+            'sobre'   => $sobre
         ]);
+
     }
 
     // =========================

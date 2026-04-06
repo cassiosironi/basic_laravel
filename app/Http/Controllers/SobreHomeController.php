@@ -4,9 +4,13 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Models\Sobre;
+use App\Support\Notifies;
 
 class SobreHomeController extends Controller
 {
+    use Notifies;
+
     // =========================
     // ADMIN - EDIT (singleton)
     // =========================
@@ -57,9 +61,8 @@ class SobreHomeController extends Controller
         $rows = DB::select("SELECT id FROM sobre ORDER BY id ASC LIMIT 1");
         $id = isset($rows[0]) ? (int)$rows[0]->id : 0;
 
-        if ($id <= 0) {
-            // fallback: cria se não existir
-            DB::statement("
+        if ($id <= 0) {            
+            $affected = DB::insert("
                 INSERT INTO sobre (image, title, text)
                 VALUES (?, ?, ?)
             ", [
@@ -68,10 +71,18 @@ class SobreHomeController extends Controller
                 $request->input('text')
             ]);
 
-            return redirect()->route('admin.sobre.edit');
+            $affected = $affected ? 1 : 0;
+
+            return $this->handleAffected(
+                $affected,
+                'admin.sobre.edit',
+                'Conteúdo Sobre salvo com sucesso!',
+                'Erro ao salvar o conteúdo Sobre!'
+            );
         }
 
-        DB::statement("
+       
+        $affected = DB::update("
             UPDATE sobre
             SET image = ?, title = ?, text = ?
             WHERE id = ?
@@ -82,6 +93,12 @@ class SobreHomeController extends Controller
             $id
         ]);
 
-        return redirect()->route('admin.sobre.edit');
+        return $this->handleAffected(
+            $affected,
+            'admin.sobre.edit',
+            'Conteúdo Sobre atualizado com sucesso!',
+            'Erro ao atualizar o conteúdo Sobre!'
+        );
+
     }
 }
