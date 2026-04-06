@@ -1,9 +1,6 @@
 @include('admin.partials.head')
 @include('admin.partials.menu')
 
-{{-- Notificações --}}
-@include('admin.partials.notify')
-
 <div class="container my-4">
 
   <div class="row mb-4">
