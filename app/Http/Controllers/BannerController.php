@@ -5,12 +5,13 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Support\Notifies;
+use App\Support\SanitizesInput;
 use App\Models\Banners;
 
 class BannerController extends Controller
 {
 
-    use Notifies;
+    use Notifies, SanitizesInput;
 
     // =========================
     // SITE
@@ -92,12 +93,15 @@ class BannerController extends Controller
 
     public function adminStore(Request $request)
     {
-        // Validação simples (sem FormRequest, só estudo)
         $request->validate([
             'image' => 'required|string|max:255',
             'title' => 'required|string|max:120',
             'subtitle' => 'nullable|string|max:255',
         ]);
+
+        $image = $this->clean($request->input('image'));
+        $title = $this->clean($request->input('title'));
+        $subtitle = $this->clean($request->input('subtitle'));
         
         $affected = DB::insert("
             INSERT INTO banners (image, title, subtitle)
@@ -147,17 +151,16 @@ class BannerController extends Controller
             'subtitle' => 'nullable|string|max:255',
         ]);
 
-        try {
+        try {            
+            $image = $this->clean($request->input('image'));
+            $title = $this->clean($request->input('title'));
+            $subtitle = $this->clean($request->input('subtitle'));
+
             $affected = DB::update("
                 UPDATE banners
                 SET image = ?, title = ?, subtitle = ?
                 WHERE id = ?
-            ", [
-                $request->input('image'),
-                $request->input('title'),
-                $request->input('subtitle'),
-                $id
-            ]);
+            ", [$image, $title, $subtitle, $id]);
 
             return $this->handleAffected(
                 $affected,

@@ -1,0 +1,84 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Support\Notifies;
+use App\Support\SanitizesInput;
+use App\Models\Usuario;
+
+class AdminAuthController extends Controller
+{
+    use Notifies, SanitizesInput;
+
+    public function showLogin()
+    {
+        return view('admin.auth.login');
+    }
+
+    public function login(Request $request)
+    {
+        $request->validate([
+            'login' => 'required|string|max:80',
+            'senha' => 'required|string|max:120',
+        ]);
+
+        try {
+            $login = $this->clean($request->input('login'));
+
+            $rows = DB::select("
+                SELECT id, nome, login, senha_md5, ativo
+                FROM usuarios
+                WHERE login = ?
+                LIMIT 1
+            ", [$login]);
+
+            $user = isset($rows[0]) ? $rows[0] : null;
+
+            if (!$user) {
+                return $this->backNotify('danger', 'Usuário não encontrado.');
+            }
+
+            if ((int)$user->ativo !== 1) {
+                return $this->backNotify('warning', 'Usuário inativo. Contate o administrador.');
+            }
+
+            $senhaInformada = $request->input('senha');
+            $hash = md5($senhaInformada);
+
+            if ($hash !== $user->senha_md5) {
+                return $this->backNotify('danger', 'Senha inválida.');
+            }
+
+            // Login OK: grava sessão
+            $request->session()->regenerate();
+
+            session([
+                'admin_user' => [
+                    'id'   => (int)$user->id,
+                    'nome' => (string)$user->nome,
+                    'login'=> (string)$user->login
+                ],
+                // flag para o middleware registrar log 1x
+                'just_logged_in' => 1
+            ]);
+
+            return $this->redirectNotify('admin.index', 'success', 'Login realizado com sucesso!');
+
+        } catch (\Throwable $e) {
+            // opcional: \Log::error($e->getMessage());
+            return $this->handleException('Erro inesperado no login.');
+        }
+    }
+
+    public function logout(Request $request)
+    {
+        $request->session()->forget('admin_user');
+        $request->session()->forget('just_logged_in');
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return $this->redirectNotify('admin.login', 'success', 'Você saiu do sistema.');
+    }
+}

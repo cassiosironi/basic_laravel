@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BannerController;
 use App\Http\Controllers\SobreHomeController;
+use App\Http\Controllers\AdminAuthController;
 
 // ========================
 // SITE
@@ -20,38 +21,59 @@ Route::prefix('site')->group(function () {
 // ADMIN
 // ========================
 Route::get('/admin', function () {
-    return redirect()->route('admin.home');
+    return redirect()->route('admin.index');
 });
 
 Route::prefix('admin')->group(function () {
+    
+    // rotas públicas (sem auth)
+    Route::get('/login', [AdminAuthController::class, 'showLogin'])
+        ->name('admin.login');
 
-// banners 
-    Route::get('/banners', [BannerController::class, 'adminIndex'])
-        ->name('admin.banners.index');
+    Route::post('/login', [AdminAuthController::class, 'login'])
+        ->middleware('throttle:admin-login')
+        ->name('admin.login.submit');
 
-    Route::get('/banners/create', [BannerController::class, 'adminCreate'])
-        ->name('admin.banners.create');
+    Route::post('/logout', [AdminAuthController::class, 'logout'])
+        ->name('admin.logout');
 
-    Route::post('/banners/store', [BannerController::class, 'adminStore'])
-        ->name('admin.banners.store');
+        
+    Route::middleware(['admin.auth', 'admin.loginlog'])->group(function () {
 
-    Route::get('/banners/{id}/show', [BannerController::class, 'adminShow'])
-        ->name('admin.banners.show');
+        // Home do admin (admin.index)
+        Route::get('/', function () {
+            return view('admin.index');
+        })->name('admin.index');
 
-    Route::get('/banners/{id}/edit', [BannerController::class, 'adminEdit'])
-        ->name('admin.banners.edit');
+        // banners 
+            Route::get('/banners', [BannerController::class, 'adminIndex'])
+                ->name('admin.banners.index');
 
-    Route::post('/banners/{id}/update', [BannerController::class, 'adminUpdate'])
-        ->name('admin.banners.update');
+            Route::get('/banners/create', [BannerController::class, 'adminCreate'])
+                ->name('admin.banners.create');
 
-    Route::post('/banners/{id}/destroy', [BannerController::class, 'adminDestroy'])
-        ->name('admin.banners.destroy');
+            Route::post('/banners/store', [BannerController::class, 'adminStore'])
+                ->name('admin.banners.store');
 
-// sobre (SINGLETON)
-    Route::get('/sobre/edit', [SobreHomeController::class, 'adminEdit'])
-        ->name('admin.sobre.edit');
+            Route::get('/banners/{id}/show', [BannerController::class, 'adminShow'])
+                ->name('admin.banners.show');
 
-    Route::post('/sobre/update', [SobreHomeController::class, 'adminUpdate'])
-        ->name('admin.sobre.update');
+            Route::get('/banners/{id}/edit', [BannerController::class, 'adminEdit'])
+                ->name('admin.banners.edit');
+
+            Route::post('/banners/{id}/update', [BannerController::class, 'adminUpdate'])
+                ->name('admin.banners.update');
+
+            Route::post('/banners/{id}/destroy', [BannerController::class, 'adminDestroy'])
+                ->name('admin.banners.destroy');
+
+        // sobre (SINGLETON)
+            Route::get('/sobre/edit', [SobreHomeController::class, 'adminEdit'])
+                ->name('admin.sobre.edit');
+
+            Route::post('/sobre/update', [SobreHomeController::class, 'adminUpdate'])
+                ->name('admin.sobre.update');
+
+    });
 
 });

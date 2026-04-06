@@ -6,10 +6,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Sobre;
 use App\Support\Notifies;
+use App\Support\SanitizesInput;
 
 class SobreHomeController extends Controller
 {
-    use Notifies;
+    use Notifies, SanitizesInput;
 
     // =========================
     // ADMIN - EDIT (singleton)
