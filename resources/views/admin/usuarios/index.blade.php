@@ -11,7 +11,7 @@
       </a>
   </div>
 
-  <table class="table table-bordered table-hover align-middle">
+  <table id="datatable" class="table table-bordered table-hover align-middle">
     <thead>
       <tr>
         <th>Nome</th>
