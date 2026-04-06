@@ -58,6 +58,10 @@ class SobreHomeController extends Controller
             'text'  => 'nullable|string|max:5000',
         ]);
 
+        $image = $this->clean($request->input('image'));
+        $title = $this->clean($request->input('title'));
+        $text = $this->clean($request->input('text'));
+
         // pega o primeiro registro como alvo
         $rows = DB::select("SELECT id FROM sobre ORDER BY id ASC LIMIT 1");
         $id = isset($rows[0]) ? (int)$rows[0]->id : 0;
@@ -66,11 +70,7 @@ class SobreHomeController extends Controller
             $affected = DB::insert("
                 INSERT INTO sobre (image, title, text)
                 VALUES (?, ?, ?)
-            ", [
-                $request->input('image'),
-                $request->input('title'),
-                $request->input('text')
-            ]);
+            ", [$image, $title, $text]);
 
             $affected = $affected ? 1 : 0;
 
@@ -87,12 +87,7 @@ class SobreHomeController extends Controller
             UPDATE sobre
             SET image = ?, title = ?, text = ?
             WHERE id = ?
-        ", [
-            $request->input('image'),
-            $request->input('title'),
-            $request->input('text'),
-            $id
-        ]);
+        ", [$image, $title, $text]);
 
         return $this->handleAffected(
             $affected,
