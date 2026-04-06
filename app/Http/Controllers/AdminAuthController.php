@@ -26,9 +26,10 @@ class AdminAuthController extends Controller
 
         try {
             $login = $this->clean($request->input('login'));
+            $senha = $this->clean($request->input('senha'));
 
             $rows = DB::select("
-                SELECT id, nome, login, senha_md5, ativo
+                SELECT id, nome, login, nivel, senha, ativo
                 FROM usuarios
                 WHERE login = ?
                 LIMIT 1
@@ -44,10 +45,10 @@ class AdminAuthController extends Controller
                 return $this->backNotify('warning', 'Usuário inativo. Contate o administrador.');
             }
 
-            $senhaInformada = $request->input('senha');
+            $senhaInformada = $senha;
             $hash = md5($senhaInformada);
 
-            if ($hash !== $user->senha_md5) {
+            if ($hash !== $user->senha) {
                 return $this->backNotify('danger', 'Senha inválida.');
             }
 
@@ -55,10 +56,11 @@ class AdminAuthController extends Controller
             $request->session()->regenerate();
 
             session([
-                'admin_user' => [
-                    'id'   => (int)$user->id,
-                    'nome' => (string)$user->nome,
-                    'login'=> (string)$user->login
+                'admin_user' => [                    
+                    'id'    => (int)$user->id,
+                    'nome'  => (string)$user->nome,
+                    'login' => (string)$user->login,
+                    'nivel' => (string)$user->nivel
                 ],
                 // flag para o middleware registrar log 1x
                 'just_logged_in' => 1

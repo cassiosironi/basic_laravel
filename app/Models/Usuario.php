@@ -9,7 +9,7 @@ class Usuario extends Model
     protected $table = 'usuarios';
 
     protected $fillable = [
-        'nome', 'login', 'senha_md5', 'ativo'
+        'nome', 'login', 'nível', 'senha', 'ativo'
     ];
 
     public $timestamps = false; // se você não está usando created_at/updated_at
@@ -21,7 +21,7 @@ class Usuario extends Model
 //   id INT AUTO_INCREMENT PRIMARY KEY,
 //   nome VARCHAR(120) NOT NULL,
 //   login VARCHAR(80) NOT NULL UNIQUE,
-//   senha_md5 CHAR(32) NOT NULL,
+//   senha CHAR(32) NOT NULL,
 //   ativo TINYINT(1) NOT NULL DEFAULT 1,
 //   created_at DATETIME NULL,
 //   updated_at DATETIME NULL

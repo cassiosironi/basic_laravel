@@ -44,35 +44,43 @@ Route::prefix('admin')->group(function () {
         Route::get('/', function () {
             return view('admin.index');
         })->name('admin.index');
+                
+        // BANNERS → admin e editor
+            Route::middleware('admin.level:admin,editor')->group(function () {
 
-        // banners 
-            Route::get('/banners', [BannerController::class, 'adminIndex'])
-                ->name('admin.banners.index');
+                Route::get('/banners', [BannerController::class, 'adminIndex'])
+                    ->name('admin.banners.index');
 
-            Route::get('/banners/create', [BannerController::class, 'adminCreate'])
-                ->name('admin.banners.create');
+                Route::get('/banners/create', [BannerController::class, 'adminCreate'])
+                    ->name('admin.banners.create');
 
-            Route::post('/banners/store', [BannerController::class, 'adminStore'])
-                ->name('admin.banners.store');
+                Route::post('/banners/store', [BannerController::class, 'adminStore'])
+                    ->name('admin.banners.store');
 
-            Route::get('/banners/{id}/show', [BannerController::class, 'adminShow'])
-                ->name('admin.banners.show');
+                Route::get('/banners/{id}/edit', [BannerController::class, 'adminEdit'])
+                    ->name('admin.banners.edit');
 
-            Route::get('/banners/{id}/edit', [BannerController::class, 'adminEdit'])
-                ->name('admin.banners.edit');
+                Route::post('/banners/{id}/update', [BannerController::class, 'adminUpdate'])
+                    ->name('admin.banners.update');
 
-            Route::post('/banners/{id}/update', [BannerController::class, 'adminUpdate'])
-                ->name('admin.banners.update');
+                Route::post('/banners/{id}/destroy', [BannerController::class, 'adminDestroy'])
+                    ->name('admin.banners.destroy');
+            });
 
-            Route::post('/banners/{id}/destroy', [BannerController::class, 'adminDestroy'])
-                ->name('admin.banners.destroy');
+            // SOBRE → admin e editor
+            Route::middleware('admin.level:admin,editor')->group(function () {
+                Route::get('/sobre/edit', [SobreHomeController::class, 'adminEdit'])
+                    ->name('admin.sobre.edit');
 
-        // sobre (SINGLETON)
-            Route::get('/sobre/edit', [SobreHomeController::class, 'adminEdit'])
-                ->name('admin.sobre.edit');
+                Route::post('/sobre/update', [SobreHomeController::class, 'adminUpdate'])
+                    ->name('admin.sobre.update');
+            });
 
-            Route::post('/sobre/update', [SobreHomeController::class, 'adminUpdate'])
-                ->name('admin.sobre.update');
+            // USUÁRIOS → SOMENTE admin 
+            Route::middleware('admin.level:admin')->group(function () {
+                // CRUD de usuários
+            });
+
 
     });
 
