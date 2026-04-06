@@ -14,13 +14,16 @@
     </a>
   </div>
 
-    <form method="POST" action="{{ route('admin.usuarios.update', ['id' => $usuario->id]) }}">  
+    <form method="POST" action="{{ route('admin.usuarios.update', ['id' => $usuario->id]) }}" class="needs-validation" novalidate>  
         @csrf
 
         <div class="mb-3">
             <label class="form-label">Nome</label>
             <input class="form-control" name="nome"
-                    value="<?php echo $usuario->nome; ?>" required>
+                    value="<?php echo $usuario->nome; ?>" required>                    
+            <div class="invalid-feedback">
+                Campo obrigatório!
+            </div>
         </div>
 
         <div class="mb-3">

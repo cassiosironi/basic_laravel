@@ -6,22 +6,31 @@
   <h1 class="h4">Novo Usuário</h1>
 
 
-   <form method="POST" action="{{ route('admin.usuarios.store') }}">
+   <form method="POST" action="{{ route('admin.usuarios.store') }}" class="needs-validation" novalidate>
     @csrf
 
     <div class="mb-3">
       <label>Nome</label>
       <input class="form-control" name="nome" required>
+      <div class="invalid-feedback">
+          Campo obrigatório!
+      </div>
     </div>
 
     <div class="mb-3">
       <label>Login</label>
       <input class="form-control" name="login" required>
+      <div class="invalid-feedback">
+          Campo obrigatório!
+      </div>
     </div>
 
     <div class="mb-3">
       <label>Senha</label>
       <input type="password" class="form-control" name="senha" required>
+      <div class="invalid-feedback">
+          Campo obrigatório!
+      </div>
     </div>
 
     <div class="mb-3">
