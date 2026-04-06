@@ -3,22 +3,22 @@
 <nav class="navbar navbar-dark bg-primary">
   <div class="container">
 
-    {{ route('admin.index') }}Admin CMS</a>
+    <a href="{{ route('admin.index') }}">Admin CMS</a>
 
     <ul class="navbar-nav flex-row gap-3">
 
       @if (in_array($u['nivel'], ['admin','editor']))
         <li class="nav-item">
-          {{ route('admin.banners.index') }}Banners</a>
+          <a href="{{ route('admin.banners.index') }}">Banners</a>
         </li>
         <li class="nav-item">
-          {{ route('admin.sobre.edit') }}Sobre</a>
+          <a href="{{ route('admin.sobre.edit') }}">Sobre</a>
         </li>
       @endif
-
+      
       @if ($u['nivel'] === 'admin')
         <li class="nav-item">
-          Usuários
+          <a href="{{ route('admin.usuarios.index') }}">Usuários</a>
         </li>
       @endif
 
@@ -27,12 +27,9 @@
       </li>
 
       <li class="nav-item ms-2">
-        {{ route('admin.logout') }}
-          @csrf
-          <button type="submit" class="btn btn-sm btn-outline-light">
+          <a href="{{ route('admin.logout') }}" class="btn btn-sm btn-outline-light">
             Sair
-          </button>
-        </form>
+          </a>
       </li>
 
     </ul>

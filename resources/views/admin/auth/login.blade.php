@@ -12,7 +12,7 @@
 
           <h1 class="h4 mb-3 text-center">Login - Admin CMS</h1>
 
-          {{ route('admin.login.submit') }}
+          <form method="POST" action="{{ route('admin.login.submit') }}">
             @csrf
 
             <div class="mb-3">

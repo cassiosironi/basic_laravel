@@ -1,9 +1,12 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AdminAuthController;
+
 use App\Http\Controllers\BannerController;
 use App\Http\Controllers\SobreHomeController;
-use App\Http\Controllers\AdminAuthController;
+use App\Http\Controllers\AdminUsuarioController;
+
 
 // ========================
 // SITE
@@ -40,12 +43,12 @@ Route::prefix('admin')->group(function () {
         
     Route::middleware(['admin.auth', 'admin.loginlog'])->group(function () {
 
-        // Home do admin (admin.index)
-        Route::get('/', function () {
-            return view('admin.index');
-        })->name('admin.index');
+            // Home do admin (admin.index)
+            Route::get('/', function () {
+                return view('admin.index');
+            })->name('admin.index');
                 
-        // BANNERS → admin e editor
+            // BANNERS → admin e editor
             Route::middleware('admin.level:admin,editor')->group(function () {
 
                 Route::get('/banners', [BannerController::class, 'adminIndex'])
@@ -78,9 +81,29 @@ Route::prefix('admin')->group(function () {
 
             // USUÁRIOS → SOMENTE admin 
             Route::middleware('admin.level:admin')->group(function () {
-                // CRUD de usuários
-            });
+                                
+                Route::get('/usuarios', [AdminUsuarioController::class, 'index'])
+                    ->name('admin.usuarios.index');
 
+                Route::get('/usuarios/create', [AdminUsuarioController::class, 'create'])
+                    ->name('admin.usuarios.create');
+
+                Route::post('/usuarios/store', [AdminUsuarioController::class, 'store'])
+                    ->name('admin.usuarios.store');
+
+                Route::get('/usuarios/{id}/edit', [AdminUsuarioController::class, 'edit'])
+                    ->name('admin.usuarios.edit');
+
+                Route::post('/usuarios/{id}/update', [AdminUsuarioController::class, 'update'])
+                    ->name('admin.usuarios.update');
+
+                Route::post('/usuarios/{id}/delete', [AdminUsuarioController::class, 'delete'])
+                    ->name('admin.usuarios.delete');
+
+                Route::get('/usuarios/{id}/logs', [AdminUsuarioController::class, 'logs'])
+                    ->name('admin.usuarios.logs');
+
+            });
 
     });
 

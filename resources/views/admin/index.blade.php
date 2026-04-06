@@ -27,7 +27,7 @@
           </p>
         </div>
         <div class="card-footer bg-white border-top-0">
-          {{ route('admin.banners.index') }}
+          <a href="{{ route('admin.banners.index') }}">
             Acessar
           </a>
         </div>
@@ -44,24 +44,26 @@
           </p>
         </div>
         <div class="card-footer bg-white border-top-0">
-          {{ route('admin.sobre.edit') }}
+          <a href="{{ route('admin.sobre.edit') }}">
             Editar
           </a>
         </div>
       </div>
     </div>
 
-    {{-- Card Usuários (futuro) --}}
+    {{-- Card Usuários --}}
     <div class="col-12 col-md-6 col-lg-4">
       <div class="card shadow-sm h-100 border-secondary">
         <div class="card-body">
           <h5 class="card-title">Usuários</h5>
           <p class="card-text text-muted">
-            Gerenciamento de usuários do painel (em breve).
+            Gerenciamento de usuários do painel.
           </p>
         </div>
-        <div class="card-footer bg-white border-top-0 text-muted">
-          Indisponível
+        <div class="card-footer bg-white border-top-0">
+          <a href="{{ route('admin.usuarios.index') }}">
+            Acessar
+          </a>
         </div>
       </div>
     </div>

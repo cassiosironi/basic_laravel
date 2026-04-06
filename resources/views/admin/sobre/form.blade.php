@@ -21,5 +21,5 @@
 
 <div class="d-flex gap-2">
   <button type="submit" class="btn btn-primary">Salvar</button>
-  <a href="/admin/sobre" class="btn btn-outline-secondary">Voltar</a>
+  <a href="{{ route('admin.sobre') }}" class="btn btn-outline-secondary">Voltar</a>
 </div>

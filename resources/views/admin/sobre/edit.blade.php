@@ -8,7 +8,7 @@
   <div class="card shadow-sm">
     <div class="card-body">
 
-      <form action="/admin/sobre/update" method="post">
+      <form action="{{ route('admin.sobre.update') }}" method="post">
         @csrf
         @include('admin.sobre.form')
       </form>

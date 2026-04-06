@@ -21,6 +21,7 @@ class Usuario extends Model
 //   id INT AUTO_INCREMENT PRIMARY KEY,
 //   nome VARCHAR(120) NOT NULL,
 //   login VARCHAR(80) NOT NULL UNIQUE,
+//   nivel VARCHAR(10) NOT NULL,
 //   senha CHAR(32) NOT NULL,
 //   ativo TINYINT(1) NOT NULL DEFAULT 1,
 //   created_at DATETIME NULL,
