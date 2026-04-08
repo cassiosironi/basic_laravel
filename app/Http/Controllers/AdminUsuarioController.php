@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Support\Notifies;
 use App\Support\SanitizesInput;
+use App\Models\Usuario;
 
 class AdminUsuarioController extends Controller
 {

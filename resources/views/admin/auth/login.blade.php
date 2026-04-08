@@ -15,13 +15,13 @@
             @csrf
 
             <div class="mb-3">
-              <label class="form-label">Login</label>
+              <label class="form-label"><i class="bi-person-lines-fill me-2"></i>Login</label>
               <input type="text" name="login" class="form-control"
                      value="<?php echo old('login'); ?>" required>
             </div>
 
             <div class="mb-3">
-              <label class="form-label">Senha</label>
+              <label class="form-label"><i class="bi bi-key me-2"></i>Senha</label>
               <input type="password" name="senha" class="form-control" required>
             </div>
 
