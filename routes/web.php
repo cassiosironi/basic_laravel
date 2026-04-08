@@ -11,6 +11,8 @@ use App\Http\Controllers\AdminUsuarioController;
 // ========================
 // SITE
 // ========================
+
+// teste commit 
 Route::get('/', function () {
     return redirect()->route('site.home');
 });
