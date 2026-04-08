@@ -1,4 +1,5 @@
 @include('admin.partials.head')
+@include('admin.partials.notify')
 
 <div class="container">
   <div class="row justify-content-center">

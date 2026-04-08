@@ -3,12 +3,15 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Admin - Banners</title>
+  <title>Admin CMS</title>
 
   <!-- Bootstrap 5 -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="{{ asset('css/style_admin.css') }}">
+
 </head>
 <body class="bg-light">
 
-@include('partials.notify')
+@include('admin.partials.preloader')
