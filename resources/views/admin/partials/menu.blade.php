@@ -25,6 +25,10 @@
       <li class="nav-item text-white ms-3">
         <?php echo $u['nome']; ?>
       </li>
+      
+      <li class="nav-item">
+        <a href="{{ route('admin.perfil.senha') }}">Meu Perfil</a>
+      </li>
 
       <li class="nav-item ms-2">
           <a href="{{ route('admin.logout') }}" class="btn btn-sm btn-outline-light">

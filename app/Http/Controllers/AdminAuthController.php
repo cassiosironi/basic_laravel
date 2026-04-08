@@ -74,6 +74,58 @@ class AdminAuthController extends Controller
         }
     }
 
+        
+    public function editPassword()
+    {
+        return view('admin.perfil.senha');
+    }
+        
+    public function updatePassword(Request $request)
+    {
+        $request->validate([
+            'senha_atual' => 'required|string',
+            'nova_senha'  => 'required|string|min:3|confirmed',
+        ]);
+
+        $user = session('admin_user');
+        $userId = (int) $user['id'];
+
+        // busca senha atual no banco
+        $rows = DB::select("
+            SELECT senha_md5
+            FROM usuarios
+            WHERE id = ?
+            LIMIT 1
+        ", [$userId]);
+
+        if (!isset($rows[0])) {
+            return $this->backNotify('danger', 'Usuário não encontrado.');
+        }
+
+        // confere senha atual
+        if (md5($request->input('senha_atual')) !== $rows[0]->senha_md5) {
+            return $this->backNotify('danger', 'Senha atual incorreta.');
+        }
+
+        // atualiza senha
+        $affected = DB::update("
+            UPDATE usuarios
+            SET senha_md5 = ?
+            WHERE id = ?
+        ", [
+            md5($request->input('nova_senha')),
+            $userId
+        ]);
+
+        return $this->handleAffected(
+            $affected,
+            'admin.index',
+            'Senha alterada com sucesso!',
+            'Erro ao alterar a senha.'
+        );
+    }
+
+
     public function logout(Request $request)
     {
         $request->session()->forget('admin_user');

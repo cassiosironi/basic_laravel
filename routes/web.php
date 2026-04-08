@@ -49,6 +49,15 @@ Route::prefix('admin')->group(function () {
             Route::get('/', function () {
                 return view('admin.index');
             })->name('admin.index');
+
+            
+            // perfil / senha (admin e editor)
+            Route::get('/perfil/senha', [AdminAuthController::class, 'editPassword'])
+                ->name('admin.perfil.senha');
+
+            Route::post('/perfil/senha', [AdminAuthController::class, 'updatePassword'])
+                ->name('admin.perfil.senha.update');
+
                 
             // BANNERS → admin e editor
             Route::middleware('admin.level:admin,editor')->group(function () {
