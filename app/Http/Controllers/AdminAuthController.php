@@ -38,18 +38,33 @@ class AdminAuthController extends Controller
             $user = isset($rows[0]) ? $rows[0] : null;
 
             if (!$user) {
-                return $this->backNotify('danger', 'Usuário não encontrado.');
+                 return redirect()
+                    ->route('admin.login')
+                    ->with('notify', [
+                        'type' => 'danger',
+                        'message' => 'Usuário não encontrado.'
+                    ]);
             }
 
             if ((int)$user->ativo !== 1) {
-                return $this->backNotify('warning', 'Usuário inativo. Contate o administrador.');
+                 return redirect()
+                    ->route('admin.login')
+                    ->with('notify', [
+                        'type' => 'warning',
+                        'message' => 'Usuário inativo. Contate o administrador.'
+                    ]);
             }
 
             $senhaInformada = $senha;
             $hash = md5($senhaInformada);
 
             if ($hash !== $user->senha) {
-                return $this->backNotify('danger', 'Senha inválida.');
+                 return redirect()
+                    ->route('admin.login')
+                    ->with('notify', [
+                        'type' => 'danger',
+                        'message' => 'Senha inválida.'
+                    ]);
             }
 
             // Login OK: grava sessão
@@ -69,8 +84,8 @@ class AdminAuthController extends Controller
             return redirect()->route('admin.index');
         } catch (\Throwable $e) {
             // opcional: \Log::error($e->getMessage());
-            // return $this->handleException('Erro inesperado no login.');
-            dd($e->getMessage());
+            return $this->handleException('Erro inesperado no login.');
+            // dd($e->getMessage());
         }
     }
 
@@ -99,12 +114,22 @@ class AdminAuthController extends Controller
         ", [$userId]);
 
         if (!isset($rows[0])) {
-            return $this->backNotify('danger', 'Usuário não encontrado.');
+             return redirect()
+                ->route('admin.perfil.senha')
+                ->with('notify', [
+                    'type' => 'danger',
+                    'message' => 'Usuário não encontrado.'
+                ]);
         }
 
-        // confere senha atual
+        // confere senha atual ***
         if (md5($request->input('senha_atual')) !== $rows[0]->senha) {
-            return $this->backNotify('danger', 'Senha atual incorreta.');
+             return redirect()
+                ->route('admin.perfil.senha')
+                ->with('notify', [
+                    'type' => 'danger',
+                    'message' => 'Senha atual incorreta.'
+                ]);
         }
 
         // atualiza senha
