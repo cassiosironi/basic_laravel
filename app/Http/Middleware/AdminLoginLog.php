@@ -22,7 +22,7 @@ class AdminLoginLog
 
                 DB::statement("
                     INSERT INTO admin_login_logs (usuario_id, ip, user_agent, created_at)
-                    VALUES (?, ?, ?, NOW())
+                    VALUES (?, ?, ?, datetime('now'))
                 ", [$usuarioId, $ip, $ua]);
             }
 
