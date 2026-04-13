@@ -1,7 +1,7 @@
 <div class="mb-3">
   <label class="form-label">Imagem banner</label>
 
-  <?php $imgPath = isset($banner) && $banner->image ? $banner->image : 'img/banner/banner1.jpg'; ?>
+  <?php $imgPath = isset($banner) && $banner->image ? $banner->image : 'img/banners/default.png'; ?>
   <?php $imgUrl  = asset($imgPath); ?>
 
   {{-- Mantém a imagem atual caso o usuário não envie uma nova --}}
@@ -13,7 +13,7 @@
            id="bannerImageFile"
            class="form-control"
            accept=".jpg,.jpeg,.png,.webp">
-
+    @if (!empty($imgUrl))
     <button type="button"
             class="btn btn-outline-secondary"
             data-bs-toggle="modal"
@@ -21,6 +21,7 @@
             title="Visualizar imagem">
             <i class="bi bi-eye"></i> Visualizar
     </button>
+    @endif
   </div>
 
   <div class="form-text">
@@ -28,6 +29,7 @@
     O arquivo será salvo em <code>public/img/banners/</code> e o banco armazenará algo como <code>img/banners/arquivo.jpg</code>.
   </div>
 
+  @if (!empty($imgUrl))
   {{-- mini preview opcional --}}
   <div class="mt-2">
     <img id="bannerImageThumb"
@@ -35,6 +37,7 @@
          alt="Miniatura"
          style="max-height:70px;border:1px solid #ddd;border-radius:6px;">
   </div>
+  @endif
 </div>
 
 

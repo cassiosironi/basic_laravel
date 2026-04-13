@@ -91,7 +91,7 @@ class BannerController extends Controller
             allowedExt: ['jpg','jpeg','png','webp'],
             maxKb: 2048,
             deleteOld: true,
-            defaultPath: 'img/banners/default.jpg'
+            defaultPath: 'img/banners/default.png'
         );
         
         $max = DB::select("SELECT COALESCE(MAX(ordem),0) as m FROM banners");
@@ -162,7 +162,7 @@ class BannerController extends Controller
                 allowedExt: ['jpg','jpeg','png','webp'],
                 maxKb: 2048,
                 deleteOld: true,
-                defaultPath: 'img/banners/default.jpg'
+                defaultPath: 'img/banners/default.png'
             );
 
 
