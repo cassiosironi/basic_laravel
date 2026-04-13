@@ -7,10 +7,12 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Sobre;
 use App\Support\Notifies;
 use App\Support\SanitizesInput;
+use App\Support\UploadsImages;
+
 
 class SobreHomeController extends Controller
 {
-    use Notifies, SanitizesInput;
+    use Notifies, SanitizesInput, UploadsImages;
 
     // =========================
     // ADMIN - EDIT (singleton)
@@ -53,48 +55,64 @@ class SobreHomeController extends Controller
     public function adminUpdate(Request $request)
     {
         $request->validate([
-            'image' => 'required|string|max:255',
             'title' => 'required|string|max:120',
             'text'  => 'nullable|string|max:5000',
+
+            'image_file' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048', // 2MB
+            'image_current' => 'nullable|string|max:255',
         ]);
 
-        $image = $this->clean($request->input('image'));
         $title = $this->clean($request->input('title'));
-        $text = $this->clean($request->input('text'));
-
-        // pega o primeiro registro como alvo
+        $text  = $this->clean($request->input('text'));      
+       
         $rows = DB::select("SELECT id FROM sobre ORDER BY id ASC LIMIT 1");
-        $id = isset($rows[0]) ? (int)$rows[0]->id : 0;
+        $id = isset($rows[0]) ? (int) $rows[0]->id : 0;
+            
+        try {            
 
-        if ($id <= 0) {            
-            $affected = DB::insert("
-                INSERT INTO sobre (image, title, text)
-                VALUES (?, ?, ?)
-            ", [$image, $title, $text]);
+            $imagePath = $this->handleImageUpload(
+                $request,
+                fileInputName: 'image_file',
+                currentPathInput: 'image_current',
+                destPublicSubdir: 'img/sobre',
+                filenamePrefix: 'sobre',
+                allowedExt: ['jpg','jpeg','png','webp'],
+                maxKb: 2048,
+                deleteOld: true,
+                defaultPath: 'img/sobre/sobre1.jpg'
+            );
 
-            $affected = $affected ? 1 : 0;
+            if ($id <= 0) {
+                $ok = DB::insert("
+                    INSERT INTO sobre (image, title, text)
+                    VALUES (?, ?, ?)
+                ", [$imagePath, $title, $text]);
+
+                $affected = $ok ? 1 : 0;
+
+                return $this->handleAffected(
+                    $affected,
+                    'admin.sobre.edit',
+                    'Conteúdo Sobre salvo com sucesso!',
+                    'Erro ao salvar o conteúdo Sobre!'
+                );
+            }
+
+            $affected = DB::update("
+                UPDATE sobre
+                SET image = ?, title = ?, text = ?
+                WHERE id = ?
+            ", [$imagePath, $title, $text, $id]);
 
             return $this->handleAffected(
                 $affected,
                 'admin.sobre.edit',
-                'Conteúdo Sobre salvo com sucesso!',
-                'Erro ao salvar o conteúdo Sobre!'
+                'Conteúdo Sobre atualizado com sucesso!',
+                'Erro ao atualizar o conteúdo Sobre!'
             );
+
+        } catch (\Throwable $e) {
+            return $this->backNotify('danger', 'Falha ao salvar: ' . $e->getMessage());
         }
-
-       
-        $affected = DB::update("
-            UPDATE sobre
-            SET image = ?, title = ?, text = ?
-            WHERE id = ?
-        ", [$image, $title, $text]);
-
-        return $this->handleAffected(
-            $affected,
-            'admin.sobre.edit',
-            'Conteúdo Sobre atualizado com sucesso!',
-            'Erro ao atualizar o conteúdo Sobre!'
-        );
-
     }
 }

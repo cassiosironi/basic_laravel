@@ -9,7 +9,7 @@
   <div class="card shadow-sm">
     <div class="card-body">
 
-      <form action="{{ route('admin.sobre.update') }}" method="post">
+      <form action="{{ route('admin.sobre.update') }}" method="post" enctype="multipart/form-data">
         @csrf
         @include('admin.sobre.form')
       </form>

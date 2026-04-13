@@ -9,7 +9,7 @@
   <div class="card shadow-sm">
     <div class="card-body">
 
-      <form action="/admin/banners/<?php echo $banner->id; ?>/update" method="post" class="needs-validation" novalidate>
+      <form action="/admin/banners/<?php echo $banner->id; ?>/update" method="post" class="needs-validation" novalidate enctype="multipart/form-data">
         @csrf
         @include('admin.banners.form')
       </form>

@@ -9,7 +9,7 @@
   <div class="card shadow-sm">
     <div class="card-body">
 
-      <form action="/admin/banners/store" method="post" class="needs-validation" novalidate>
+      <form action="/admin/banners/store" method="post" class="needs-validation" novalidate enctype="multipart/form-data">
         @csrf
         @include('admin.banners.form')
       </form>

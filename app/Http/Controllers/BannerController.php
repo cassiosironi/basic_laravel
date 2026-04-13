@@ -7,11 +7,12 @@ use Illuminate\Support\Facades\DB;
 use App\Support\Notifies;
 use App\Support\SanitizesInput;
 use App\Models\Banners;
+use App\Support\UploadsImages;
 
 class BannerController extends Controller
 {
 
-    use Notifies, SanitizesInput;
+    use Notifies, SanitizesInput, UploadsImages;
 
     // =========================
     // SITE
@@ -94,15 +95,28 @@ class BannerController extends Controller
     public function adminStore(Request $request)
     {
         $request->validate([
-            'image' => 'required|string|max:255',
             'title' => 'required|string|max:120',
             'subtitle' => 'nullable|string|max:255',
+            
+            'image_file' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048', // 2MB
+            'image_current' => 'nullable|string|max:255',
         ]);
 
-        $image = $this->clean($request->input('image'));
         $title = $this->clean($request->input('title'));
         $subtitle = $this->clean($request->input('subtitle'));
         
+        $image = $this->handleImageUpload(
+            $request,
+            fileInputName: 'image_file',
+            currentPathInput: 'image_current',
+            destPublicSubdir: 'img/banners',
+            filenamePrefix: 'banner',
+            allowedExt: ['jpg','jpeg','png','webp'],
+            maxKb: 2048,
+            deleteOld: true,
+            defaultPath: 'img/banners/default.jpg'
+        );
+
         $affected = DB::insert("
             INSERT INTO banners (image, title, subtitle)
             VALUES (?, ?, ?)
@@ -146,15 +160,29 @@ class BannerController extends Controller
     public function adminUpdate(Request $request, $id)
     {
         $request->validate([
-            'image' => 'required|string|max:255',
             'title' => 'required|string|max:120',
             'subtitle' => 'nullable|string|max:255',
+
+            'image_file' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048', // 2MB
+            'image_current' => 'nullable|string|max:255',
         ]);
 
         try {            
-            $image = $this->clean($request->input('image'));
             $title = $this->clean($request->input('title'));
             $subtitle = $this->clean($request->input('subtitle'));
+                
+            $image = $this->handleImageUpload(
+                $request,
+                fileInputName: 'image_file',
+                currentPathInput: 'image_current',
+                destPublicSubdir: 'img/banners',
+                filenamePrefix: 'banner',
+                allowedExt: ['jpg','jpeg','png','webp'],
+                maxKb: 2048,
+                deleteOld: true,
+                defaultPath: 'img/banners/default.jpg'
+            );
+
 
             $affected = DB::update("
                 UPDATE banners

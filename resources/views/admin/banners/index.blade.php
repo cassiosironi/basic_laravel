@@ -35,9 +35,6 @@
                 <td class="text-muted"><?php echo $banner->subtitle; ?></td>
 
                 <td class="text-end">
-                  <a class="btn btn-outline-primary btn-sm" href="/admin/banners/<?php echo $banner->id; ?>/show">
-                    Ver
-                  </a>
 
                   <a class="btn btn-outline-secondary btn-sm" href="/admin/banners/<?php echo $banner->id; ?>/edit">
                     Editar
