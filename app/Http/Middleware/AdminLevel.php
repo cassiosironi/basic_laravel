@@ -12,15 +12,20 @@ class AdminLevel
      * ->middleware('admin.level:admin')
      * ->middleware('admin.level:admin,editor')
      */
-    public function handle(Request $request, Closure $next, $levels)
+    public function handle(Request $request, Closure $next, ...$levels)
     {
         $user = session('admin_user');
 
         if (!$user || !isset($user['nivel'])) {
             abort(403);
         }
+       
         $nivel = strtolower(trim($user['nivel']));
-        $levels = array_map(fn($l) => strtolower(trim($l)), explode(',', $levels));
+        $levels = array_map(
+            fn ($l) => strtolower(trim($l)),
+            $levels
+        );
+
 
         if (!in_array($nivel, $levels)) {
             return redirect()
