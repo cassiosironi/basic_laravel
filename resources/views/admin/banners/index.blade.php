@@ -56,10 +56,6 @@
               </tr>
             @endforeach
 
-            <?php
-            // exemplo extra de while (didático). Normalmente você não misturaria assim:
-            // echo 'Você pode usar while com arrays/iteradores se quiser.';
-            ?>
           </tbody>
         </table>
       </div>

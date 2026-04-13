@@ -40,6 +40,7 @@ class AdminAuthController extends Controller
             if (!$user) {
                  return redirect()
                     ->route('admin.login')
+                    ->withInput()
                     ->with('notify', [
                         'type' => 'danger',
                         'message' => 'Usuário não encontrado.'
@@ -49,6 +50,7 @@ class AdminAuthController extends Controller
             if ((int)$user->ativo !== 1) {
                  return redirect()
                     ->route('admin.login')
+                    ->withInput()
                     ->with('notify', [
                         'type' => 'warning',
                         'message' => 'Usuário inativo. Contate o administrador.'
@@ -61,6 +63,7 @@ class AdminAuthController extends Controller
             if ($hash !== $user->senha) {
                  return redirect()
                     ->route('admin.login')
+                    ->withInput()
                     ->with('notify', [
                         'type' => 'danger',
                         'message' => 'Senha inválida.'
@@ -81,11 +84,15 @@ class AdminAuthController extends Controller
                 'just_logged_in' => 1
             ]);
 
-            return redirect()->route('admin.index');
+            return redirect()
+                ->route('admin.index')
+                ->with('notify', [
+                        'type' => 'success',
+                        'message' => 'Login realizado com sucesso.'
+                    ]);
+
         } catch (\Throwable $e) {
-            // opcional: \Log::error($e->getMessage());
             return $this->handleException('Erro inesperado no login.');
-            // dd($e->getMessage());
         }
     }
 
