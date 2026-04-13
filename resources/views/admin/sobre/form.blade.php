@@ -33,7 +33,8 @@
     <img id="sobreImageThumb"
          src="<?php echo $imgUrl; ?>"
          alt="Miniatura"
-         style="max-height:70px;border:1px solid #ddd;border-radius:6px;">
+         style="max-height:70px;border:1px solid #ddd;border-radius:6px;"
+         loading="lazy">
   </div>
 </div>
 
@@ -65,7 +66,8 @@
         <img id="sobreImagePreview"
              src="<?php echo $imgUrl; ?>"
              alt="Pré-visualização"
-             style="max-width:100%;height:auto;border-radius:10px;">
+             style="max-width:100%;height:auto;border-radius:10px;"
+             loading="lazy">
       </div>
     </div>
   </div>

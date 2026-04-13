@@ -34,7 +34,7 @@
               <tr>
                 <td><?php echo $banner->id; ?></td>
                 <td style="width: 140px;">
-                  <img src="{{ asset($banner->image) }}" class="img-fluid rounded" alt="banner">
+                  <img src="{{ asset($banner->image) }}" class="img-fluid rounded" alt="banner" loading="lazy">
                 </td>
                 <td><?php echo $banner->title; ?></td>
                 <td class="text-muted"><?php echo $banner->subtitle; ?></td>

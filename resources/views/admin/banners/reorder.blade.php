@@ -35,7 +35,7 @@
                   <span class="badge text-bg-secondary">≡</span>
                 </td>
                 <td>
-                  <img src="{{ asset($b->image) }}" style="max-height:40px;border-radius:6px;">
+                  <img src="{{ asset($b->image) }}" style="max-height:40px;border-radius:6px;" loading="lazy">
                 </td>
                 <td><?php echo $b->title; ?></td>
                 <td class="text-muted"><?php echo $b->subtitle; ?></td>
