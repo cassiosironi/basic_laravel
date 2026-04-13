@@ -76,6 +76,13 @@ Route::prefix('admin')->group(function () {
 
                 Route::post('/banners/{id}/destroy', [BannerController::class, 'adminDestroy'])
                     ->name('admin.banners.destroy');
+                                    
+                Route::get('/banners/reorder', [BannerController::class, 'adminReorder'])
+                    ->name('admin.banners.reorder');
+
+                Route::post('/banners/reorder/save', [BannerController::class, 'adminReorderSave'])
+                    ->name('admin.banners.reorder.save');
+
             });
 
             // SOBRE → admin e editor

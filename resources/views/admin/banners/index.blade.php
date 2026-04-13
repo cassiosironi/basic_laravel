@@ -6,7 +6,12 @@
 
   <div class="d-flex align-items-center justify-content-between mb-3">
     <h1 class="h4 mb-0">Banners - Listagem</h1>
-    <a class="btn btn-success btn-sm" href="/admin/banners/create">+ Novo</a>
+      <div>
+      <a href="{{ route('admin.banners.reorder') }}" class="btn btn-outline-secondary btn-sm">  
+          Reordenar Banners
+        </a>
+        <a class="btn btn-success btn-sm" href="/admin/banners/create">+ Novo</a>
+      </div>
   </div>
 
   <div class="card shadow-sm">

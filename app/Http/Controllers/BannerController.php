@@ -8,11 +8,12 @@ use App\Support\Notifies;
 use App\Support\SanitizesInput;
 use App\Models\Banners;
 use App\Support\UploadsImages;
+use App\Support\ReordersRecords;
 
 class BannerController extends Controller
 {
 
-    use Notifies, SanitizesInput, UploadsImages;
+    use Notifies, SanitizesInput, UploadsImages, ReordersRecords;
 
     // =========================
     // SITE
@@ -22,9 +23,9 @@ class BannerController extends Controller
     {
         // SELECT precisa de DB::select para retornar resultados
         $banners = DB::select("
-            SELECT id, image, title, subtitle
+            SELECT id, image, title, subtitle, ordem
             FROM banners
-            ORDER BY id DESC
+            ORDER BY ordem ASC, id ASC
         ");
             
         $sobre_rows = DB::select("
@@ -49,9 +50,9 @@ class BannerController extends Controller
     public function adminIndex()
     {
         $banners = DB::select("
-            SELECT id, image, title, subtitle
+            SELECT id, image, title, subtitle, ordem
             FROM banners
-            ORDER BY id DESC
+            ORDER BY ordem ASC, id ASC
         ");
 
         return view('admin.banners.index', [
@@ -60,31 +61,7 @@ class BannerController extends Controller
     }
 
     // =========================
-    // ADMIN - SHOW
-    // =========================
-
-    public function adminShow($id)
-    {
-        $rows = DB::select("
-            SELECT id, image, title, subtitle
-            FROM banners
-            WHERE id = ?
-            LIMIT 1
-        ", [$id]);
-
-        $banner = isset($rows[0]) ? $rows[0] : null;
-
-        if (!$banner) {
-            abort(404);
-        }
-
-        return view('admin.banners.show', [
-            'banner' => $banner
-        ]);
-    }
-
-    // =========================
-    // ADMIN - CREATE
+    // CREATE
     // =========================
 
     public function adminCreate()
@@ -116,11 +93,16 @@ class BannerController extends Controller
             deleteOld: true,
             defaultPath: 'img/banners/default.jpg'
         );
+        
+        $max = DB::select("SELECT COALESCE(MAX(ordem),0) as m FROM banners");
+        $next = ((int)$max[0]->m) + 1;
+
 
         $affected = DB::insert("
-            INSERT INTO banners (image, title, subtitle)
-            VALUES (?, ?, ?)
-        ", [$image, $title, $subtitle]);
+                INSERT INTO banners (image, title, subtitle, ordem)
+                VALUES (?, ?, ?, ?)
+            ", [$image, $title, $subtitle, $next]);
+
 
         // DB::insert retorna boolean → normalize:
         $affected = $affected ? 1 : 0;
@@ -134,7 +116,7 @@ class BannerController extends Controller
     }
 
     // =========================
-    // ADMIN - EDIT
+    // EDIT
     // =========================
 
     public function adminEdit($id)
@@ -204,8 +186,48 @@ class BannerController extends Controller
 
     }
 
+    
     // =========================
-    // ADMIN - DELETE
+    // REORDER
+    // =========================    
+    public function adminReorder()
+    {
+        $banners = DB::select("
+            SELECT id, image, title, subtitle, ordem
+            FROM banners
+            ORDER BY ordem ASC, id ASC
+        ");
+
+        return view('admin.banners.reorder', [
+            'banners' => $banners
+        ]);
+    }
+
+    public function adminReorderSave(Request $request)
+    {
+        $request->validate([
+            'order' => 'required|array',
+            'order.*' => 'required|integer'
+        ]);
+
+        try {
+            $affected = $this->applyOrder('banners', $request->input('order'), 'id', 'ordem', 1);
+
+            // aqui você pode usar notify
+            return $this->redirectNotify(
+                'admin.banners.index',
+                'success',
+                'Ordem atualizada com sucesso!'
+            );
+
+        } catch (\Throwable $e) {
+            return $this->handleException('Falha ao reordenar');
+        }
+    }
+
+
+    // =========================
+    // DELETE
     // =========================
 
     public function adminDestroy(Request $request, $id)

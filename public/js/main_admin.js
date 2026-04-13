@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', function () {
             paging: true,
             searching: true,
             ordering: true,
+            order: [],
             pageLength: 10,
             language: {
                 search: "Buscar:",
