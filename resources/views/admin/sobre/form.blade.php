@@ -15,7 +15,7 @@
            accept=".jpg,.jpeg,.png,.webp">
 
     <button type="button"
-            class="btn btn-outline-secondary"
+            class="btn btn-outline-light"
             data-bs-toggle="modal"
             data-bs-target="#modalSobreImagem"
             title="Visualizar imagem">
@@ -51,15 +51,15 @@
 
 <div class="d-flex gap-2">
   <button type="submit" class="btn btn-primary">Salvar</button>
-  <a href="{{ route('admin.index') }}" class="btn btn-outline-secondary">Voltar</a>
+  <a href="{{ route('admin.index') }}" class="btn btn-outline-light"><i class="bi bi-arrow-return-left"></i> Voltar</a>
 </div>
 
 {{-- MODAL Bootstrap --}}
 <div class="modal fade" id="modalSobreImagem" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-lg modal-dialog-centered">
-    <div class="modal-content">
+    <div class="modal-content bg-light">
       <div class="modal-header">
-        <h5 class="modal-title">Visualizar imagem</h5>
+        <h5 class="modal-title text-dark">Visualizar imagem</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
       </div>
       <div class="modal-body text-center">

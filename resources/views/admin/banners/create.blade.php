@@ -1,12 +1,13 @@
 @include('admin.partials.head')
 @include('admin.partials.menu')
-@include('admin.partials.notify')
 
-<div class="container my-4">
+<div class="main-content my-4">
+
+@include('admin.partials.notify')
 
   <h1 class="h4 mb-3">Novo Banner</h1>
 
-  <div class="card shadow-sm">
+  <div class="glass-card">
     <div class="card-body">
 
       <form action="/admin/banners/store" method="post" class="needs-validation" novalidate enctype="multipart/form-data">

@@ -215,7 +215,8 @@ class BannerController extends Controller
             $affected = $this->applyOrder('banners', $request->input('order'), 'id', 'ordem', 1);
 
             // aqui você pode usar notify
-            return $this->redirectNotify(
+            return $this->handleAffected(
+                $affected,
                 'admin.banners.index',
                 'success',
                 'Ordem atualizada com sucesso!'

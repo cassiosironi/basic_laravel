@@ -1,12 +1,14 @@
 @include('admin.partials.head')
 @include('admin.partials.menu')
+
+<div class="main-content my-4">
+
 @include('admin.partials.notify')
 
-<div class="container my-4">
   <div class="d-flex justify-content-between align-items-center mb-3">
     <h1 class="h4 mb-0">Reordenar Banners</h1>
-        <a href="{{ route('admin.banners.index') }}" class="btn btn-outline-secondary">  
-        Voltar
+        <a href="{{ route('admin.banners.index') }}" class="btn btn-outline-light">  
+        <i class="bi bi-arrow-return-left"></i> Voltar
         </a>
   </div>
 
@@ -14,17 +16,17 @@
     Arraste os banners pelo ícone “≡” para definir a nova ordem. Depois clique em <strong>Salvar ordem</strong>.
   </div>
 
-  <div class="card shadow-sm">
+  <div class="glass-card">
     <div class="card-body">
 
       <div class="table-responsive">
         <table class="table table-hover align-middle mb-0">
           <thead>
             <tr>
-              <th style="width: 60px;">Ordem</th>
-              <th style="width: 80px;"></th>
-              <th>Título</th>
-              <th class="text-muted">Subtexto</th>
+              <th class="text-light" style="width: 60px;">Ordem</th>
+              <th class="text-light" style="width: 80px;"></th>
+              <th class="text-light">Título</th>
+              <th class="text-light">Subtexto</th>
             </tr>
           </thead>
 
@@ -37,8 +39,8 @@
                 <td>
                   <img src="{{ asset($b->image) }}" style="max-height:40px;border-radius:6px;" loading="lazy">
                 </td>
-                <td><?php echo $b->title; ?></td>
-                <td class="text-muted"><?php echo $b->subtitle; ?></td>
+                <td class="text-light"><?php echo $b->title; ?></td>
+                <td class="text-light"><?php echo $b->subtitle; ?></td>
               </tr>
             @endforeach
           </tbody>
