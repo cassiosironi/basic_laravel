@@ -66,5 +66,6 @@ class Kernel extends HttpKernel
         'admin.auth' => \App\Http\Middleware\AdminAuth::class,
         'admin.level' => \App\Http\Middleware\AdminLevel::class,
         'admin.loginlog' => \App\Http\Middleware\AdminLoginLog::class,
+        'site.client' => \App\Http\Middleware\SiteClientOnly::class,
     ];
 }

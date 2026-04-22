@@ -84,12 +84,25 @@ class AdminAuthController extends Controller
                 'just_logged_in' => 1
             ]);
 
+           
+            // ✅ REGRA: se for CLIENT, redireciona para abertura de chamado
+            if ($user->nivel === 'client') {
+                return redirect()
+                    ->route('site.chamados.create')
+                    ->with('notify', [
+                        'type' => 'info',
+                        'message' => 'Abra seu chamado abaixo.'
+                    ]);
+            }
+
+            // ✅ Admin / Editor seguem para o admin
             return redirect()
                 ->route('admin.index')
                 ->with('notify', [
-                        'type' => 'success',
-                        'message' => 'Login realizado com sucesso.'
-                    ]);
+                    'type' => 'success',
+                    'message' => 'Login realizado com sucesso.'
+                ]);
+
 
         } catch (\Throwable $e) {
             return $this->handleException('Erro inesperado no login.');

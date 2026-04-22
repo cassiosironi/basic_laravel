@@ -2,10 +2,10 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminAuthController;
-
 use App\Http\Controllers\BannerController;
 use App\Http\Controllers\SobreHomeController;
 use App\Http\Controllers\AdminUsuarioController;
+use App\Http\Controllers\ChamadoController;
 
 
 // ========================
@@ -16,8 +16,18 @@ Route::get('/', function () {
 });
 
 Route::prefix('site')->group(function () {
+
     Route::get('/home', [BannerController::class, 'siteHome'])
         ->name('site.home');
+        
+    Route::get('/chamados/abrir', [ChamadoController::class, 'create'])
+        ->middleware('site.client')
+        ->name('site.chamados.create');
+
+    Route::post('/chamados/abrir', [ChamadoController::class, 'store'])
+        ->middleware('site.client')
+        ->name('site.chamados.store');
+
 });
 
 // ========================

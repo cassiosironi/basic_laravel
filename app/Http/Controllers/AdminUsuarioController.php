@@ -76,7 +76,7 @@ class AdminUsuarioController extends Controller
 
             $affected = DB::insert("
                 INSERT INTO usuarios (nome, login, nivel, senha, ativo, created_at)
-                VALUES (?, ?, ?, ?, ?, NOW())
+                VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
             ", [$nome, $login, $nivel, $senha, $ativo]);
 
             $affected = $affected ? 1 : 0;
