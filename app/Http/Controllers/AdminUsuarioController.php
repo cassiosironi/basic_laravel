@@ -13,13 +13,37 @@ class AdminUsuarioController extends Controller
     use Notifies, SanitizesInput;
 
     // LISTAGEM
-    public function index()
+    public function index(Request $request)
     {
         $usuarios = DB::select("
             SELECT id, nome, login, nivel, ativo
             FROM usuarios
             ORDER BY nome ASC
         ");
+
+         $sql = "
+            SELECT id, nome, login, nivel, ativo
+            FROM usuarios
+            WHERE 1 = 1
+        ";
+
+        $params = [];
+
+        // Filtro por nível
+        if ($request->filled('nivel')) {
+            $sql .= " AND nivel = ? ";
+            $params[] = $request->input('nivel');
+        }
+
+        // Filtro por status
+        if ($request->filled('ativo')) {
+            $sql .= " AND ativo = ? ";
+            $params[] = (int) $request->input('ativo');
+        }
+
+        $sql .= " ORDER BY nome ASC ";
+
+        $usuarios = DB::select($sql, $params);
 
         return view('admin.usuarios.index', [
             'usuarios' => $usuarios

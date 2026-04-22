@@ -9,13 +9,47 @@
             <div class="card-header">
                 <div>
                     <h2 class="card-title">Lista de Usuários</h2>
-                    <p class="card-subtitle">Manage your user base</p>
+                    <p class="card-subtitle">Administração da base de usuários do sistema.</p>
                 </div>
                 <div class="card-actions">
                      <a class="card-btn" href="{{ route('admin.usuarios.create') }}">
                       + Novo Usuário
                     </a>                    
                 </div>
+            </div>
+            <div>
+              <form method="GET" action="{{ route('admin.usuarios.index') }}" class="row g-3 pb-3 mb-5">
+                <div class="col-md-4">
+                  <label class="form-label">Filtrar por Nível</label>
+                  <select name="nivel" class="form-select bg-light">
+                    <option value="">Todos</option>
+                    <option value="admin"  <?php echo request('nivel') === 'admin'  ? 'selected' : ''; ?>>Admin</option>
+                    <option value="editor" <?php echo request('nivel') === 'editor' ? 'selected' : ''; ?>>Editor</option>
+                    <option value="client" <?php echo request('nivel') === 'client' ? 'selected' : ''; ?>>Client</option>
+                  </select>
+                </div>
+
+                <div class="col-md-4">
+                  <label class="form-label">Filtrar por Status</label>
+                  <select name="ativo" class="form-select bg-light">
+                    <option value="">Todos</option>
+                    <option value="1" <?php echo request('ativo') === '1' ? 'selected' : ''; ?>>Ativo</option>
+                    <option value="0" <?php echo request('ativo') === '0' ? 'selected' : ''; ?>>Inativo</option>
+                  </select>
+                </div>
+
+                <div class="col-md-4 d-flex align-items-end gap-2">
+                  <button type="submit" class="btn btn-primary">
+                    Filtrar
+                  </button>
+
+                  <a class="card-btn" href="{{ route('admin.usuarios.index') }}">                  
+                    Limpar
+                  </a>
+                </div>
+
+              </form>
+
             </div>
             <div class="table-wrapper">
                 <table id="datatable" class="data-table">
