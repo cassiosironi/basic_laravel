@@ -25,7 +25,8 @@ Route::prefix('site')->group(function () {
         ->name('site.chamados.create');
 
     Route::post('/chamados/abrir', [ChamadoController::class, 'store'])
-        ->middleware('site.client')
+        ->middleware('site.client')        
+        ->middleware('throttle:10,1')
         ->name('site.chamados.store');
 
 });
@@ -44,7 +45,8 @@ Route::prefix('admin')->group(function () {
         ->name('admin.login');
 
     Route::post('/login', [AdminAuthController::class, 'login'])
-        ->middleware('throttle:admin-login')
+        ->middleware('throttle:admin-login')        
+        ->middleware('throttle:10,1')
         ->name('admin.login.submit');
 
     Route::post('/logout', [AdminAuthController::class, 'logout'])
