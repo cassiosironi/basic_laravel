@@ -32,6 +32,13 @@
                 </li>
                 
                 <li class="nav-item">
+                    <a class="nav-link" href="{{ route('admin.chamados.index') }}">
+                        <i class="bi bi-ticket-detailed me-2"></i>Chamados
+                    </a>
+                </li>
+
+                
+                <li class="nav-item">
                     <a href="#" class="nav-link">
                         <i class="bi bi-gear"></i>
                         Configurações

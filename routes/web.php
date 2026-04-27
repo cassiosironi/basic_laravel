@@ -6,6 +6,8 @@ use App\Http\Controllers\BannerController;
 use App\Http\Controllers\SobreHomeController;
 use App\Http\Controllers\AdminUsuarioController;
 use App\Http\Controllers\ChamadoController;
+use App\Http\Controllers\AdminChamadoController;
+
 
 
 // ========================
@@ -67,6 +69,21 @@ Route::prefix('admin')->group(function () {
 
             Route::post('/perfil/senha', [AdminAuthController::class, 'updatePassword'])
                 ->name('admin.perfil.senha.update');
+
+            
+            // Chamados: admin e editor
+            Route::middleware('admin.level:admin,editor')->group(function () {
+
+                Route::get('/chamados', [AdminChamadoController::class, 'index'])
+                    ->name('admin.chamados.index');
+
+                Route::get('/chamados/{id}/edit', [AdminChamadoController::class, 'edit'])
+                    ->name('admin.chamados.edit');
+
+                Route::post('/chamados/{id}/update', [AdminChamadoController::class, 'update'])
+                    ->name('admin.chamados.update');
+            });
+
                 
             // BANNERS → admin e editor
             Route::middleware('admin.level:admin,editor')->group(function () {
