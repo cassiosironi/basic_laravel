@@ -47,6 +47,8 @@
       </div>
     </div>
 
+    @include('site.partials.captcha', ['captcha' => $captcha])
+
     <button type="submit" class="btn btn-primary">
       Abrir chamado
     </button>

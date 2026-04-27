@@ -6,26 +6,44 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Support\Notifies;
 use App\Support\SanitizesInput;
+use App\Support\AntiBotCaptcha;
 use App\Models\Chamado;
 
 
 class ChamadoController extends Controller
 {
-    use Notifies, SanitizesInput;
+    use Notifies, SanitizesInput, AntiBotCaptcha;
 
     // =========================
     // SITE - FORM
     // =========================
     public function create()
-    {
-        return view('site.chamados.create');
+    {       
+        $captcha = $this->captchaGenerate('ticket_captcha');
+
+        return view('site.chamados.create', [
+            'captcha' => $captcha
+        ]);
+
     }
 
     // =========================
     // SITE - STORE
     // =========================
     public function store(Request $request)
-    {
+    {            
+        // valida captcha primeiro
+        $captchaError = $this->captchaValidate($request, 'ticket_captcha', 3);
+        if ($captchaError) {
+            return redirect()
+            ->route('site.chamados.create')
+            ->withInput()
+            ->with('notify', [
+                'type' => 'danger',
+                'message' => 'Captcha incorreto!'
+            ]);
+        }
+
         $request->validate([
             'titulo' => 'required|string|max:120',
             'descricao' => 'required|string',

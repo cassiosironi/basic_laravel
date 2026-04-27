@@ -6,19 +6,37 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Support\Notifies;
 use App\Support\SanitizesInput;
+use App\Support\AntiBotCaptcha;
 use App\Models\Usuario;
 
 class AdminAuthController extends Controller
 {
-    use Notifies, SanitizesInput;
+    use Notifies, SanitizesInput, AntiBotCaptcha;
 
     public function showLogin()
-    {
-        return view('admin.auth.login');
+    {        
+        $captcha = $this->captchaGenerate('login_captcha');
+
+        return view('admin.auth.login', [
+            'captcha' => $captcha
+        ]);
+
     }
 
     public function login(Request $request)
-    {
+    {        
+        // valida captcha + anti-bot
+        $captchaError = $this->captchaValidate($request, 'login_captcha', 3);
+        if ($captchaError) {
+            return redirect()
+            ->route('admin.login')
+            ->withInput()
+            ->with('notify', [
+                'type' => 'danger',
+                'message' => 'Captcha incorreto!'
+            ]);
+        }
+
         $request->validate([
             'login' => 'required|string|max:80',
             'senha' => 'required|string|max:120',

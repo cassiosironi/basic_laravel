@@ -36,6 +36,8 @@
                     
                 </div>
 
+                @include('admin.partials.captcha', ['captcha' => $captcha])
+
                 <div class="form-row">
                     <!-- <label class="checkbox-label">
                         <input type="checkbox" checked>

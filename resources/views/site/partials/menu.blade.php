@@ -19,7 +19,7 @@
           </ul>
       </div>
 
-       @if (in_array($u['nivel'], ['admin', 'editor', 'client']))
+       @if ($u && isset($u['nivel']) && in_array($u['nivel'], ['admin','editor','client']))
         <div class="ms-auto text-light d-flex mt-3">
           <p>Olá <?php echo $u['nome']; ?></p>
           <form action="{{ route('admin.logout') }}" method="POST">
@@ -33,7 +33,7 @@
       @endif
 
     <div class="ms-auto">
-      <a class="btn btn-outline-light btn-sm" href="{{ route('admin.index') }}">Admin</a>
+      <a class="btn btn-outline-light btn-sm" href="{{ route('admin.index') }}" target="_blank">Admin</a>
     </div>
   </div>
 </nav>
