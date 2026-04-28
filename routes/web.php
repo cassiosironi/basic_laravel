@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\SiteController;
 use App\Http\Controllers\AdminAuthController;
 use App\Http\Controllers\BannerController;
 use App\Http\Controllers\SobreHomeController;
@@ -19,7 +20,7 @@ Route::get('/', function () {
 
 Route::prefix('site')->group(function () {
 
-    Route::get('/home', [BannerController::class, 'siteHome'])
+    Route::get('/home', [SiteController::class, 'siteHome'])
         ->name('site.home');
         
     Route::get('/chamados/abrir', [ChamadoController::class, 'create'])
