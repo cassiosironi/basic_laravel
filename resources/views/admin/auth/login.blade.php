@@ -18,7 +18,13 @@
     <div class="login-container">
         <div class="login-card">
             <div class="login-header">
-                <div class="login-logo">G</div>
+                <div class="login-logo">
+                    <img class="favicon"
+                    src="<?php echo asset($config->favicon); ?>"
+                    alt="favicon"
+                    loading="lazy">
+                </div>
+                <span class="logo-text"><?php echo $config->nome_sistema; ?></span>
                 <h1 class="login-title">Bem-vindo</h1>
                 <p class="login-subtitle">Insira seu login e senha</p>
             </div>
