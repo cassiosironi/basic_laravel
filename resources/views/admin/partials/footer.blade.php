@@ -7,6 +7,6 @@
     </svg>
 </button>
 
-<footer class="site-footer">
-      <?php echo 'Admin Footer - exemplo de echo PHP'; ?>
+<footer class="site-footer text-center">
+    &copy; <?php echo $config->nome_sistema . ' | ' . date('Y') . '. Developed by cassiosironi.com. All rights reserved.'; ?> 
 </footer>

@@ -3,8 +3,13 @@
 <!-- Sidebar -->
 <aside class="sidebar" id="sidebar">
     <div class="sidebar-header">
-        <div class="logo">CS</div>
-        <span class="logo-text">CassioDash</span>
+        <div class="logo">
+            <img class="favicon"
+            src="<?php echo asset($config->favicon); ?>"
+            alt="favicon"
+            loading="lazy">
+        </div>
+        <span class="logo-text"><?php echo $config->nome_sistema; ?></span>
     </div>
 
     <ul class="nav-menu">
@@ -18,33 +23,34 @@
                     </a>
                 </li>
                 @if (in_array($u['nivel'], ['admin', 'editor']))
-                <li class="nav-item">
-                    <a href="{{ route('admin.banners.index') }}" class="nav-link">
-                        <i class="bi bi-images"></i>                            
-                        Banners
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ route('admin.sobre.edit') }}" class="nav-link">
-                        <i class="bi bi-box-seam"></i>
-                        Sobre
-                    </a>
-                </li>
-                
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ route('admin.chamados.index') }}">
-                        <i class="bi bi-ticket-detailed me-2"></i>Chamados
-                    </a>
-                </li>
+                    <li class="nav-item">
+                        <a href="{{ route('admin.banners.index') }}" class="nav-link">
+                            <i class="bi bi-images"></i>                            
+                            Banners
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('admin.sobre.edit') }}" class="nav-link">
+                            <i class="bi bi-box-seam"></i>
+                            Sobre
+                        </a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('admin.chamados.index') }}">
+                            <i class="bi bi-ticket-detailed"></i>Chamados
+                        </a>
+                    </li>
+                @endif
 
-                
-                <li class="nav-item">
-                    <a href="#" class="nav-link">
-                        <i class="bi bi-gear"></i>
-                        Configurações
-                        <span class="nav-badge">New</span>
-                    </a>
-                </li>
+                @if ($u && $u['nivel'] === 'admin')
+                    <li class="nav-item">
+                        <a href="{{ route('admin.configuracoes.edit') }}" class="nav-link">
+                            <i class="bi bi-gear"></i>
+                            Configurações
+                            <span class="nav-badge">!</span>
+                        </a>
+                    </li>
                 @endif
             </ul>
         </li>

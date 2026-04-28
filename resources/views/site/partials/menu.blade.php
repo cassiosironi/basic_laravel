@@ -2,7 +2,12 @@
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
   <div class="container">
-    <a class="navbar-brand" href="{{ route('site.home') }}">Home</a>
+    <a class="navbar-brand" href="{{ route('site.home') }}">
+      <img class="logo"
+            src="<?php echo asset($config->logo); ?>"
+            alt="logo"
+            loading="lazy">
+    </a>
     
       <div class="collapse navbar-collapse">
           <ul class="navbar-nav ms-auto">

@@ -8,6 +8,7 @@ use App\Http\Controllers\SobreHomeController;
 use App\Http\Controllers\AdminUsuarioController;
 use App\Http\Controllers\ChamadoController;
 use App\Http\Controllers\AdminChamadoController;
+use App\Http\Controllers\AdminConfiguracaoController;
 
 
 
@@ -69,8 +70,7 @@ Route::prefix('admin')->group(function () {
                 ->name('admin.perfil.senha');
 
             Route::post('/perfil/senha', [AdminAuthController::class, 'updatePassword'])
-                ->name('admin.perfil.senha.update');
-
+                ->name('admin.perfil.senha.update');           
             
             // Chamados: admin e editor
             Route::middleware('admin.level:admin,editor')->group(function () {
@@ -124,9 +124,10 @@ Route::prefix('admin')->group(function () {
                     ->name('admin.sobre.update');
             });
 
-            // USUÁRIOS → SOMENTE admin 
-            Route::middleware('admin.level:admin')->group(function () {
-                                
+            // → SOMENTE admin 
+            Route::middleware(['admin.auth', 'admin.level:admin'])->group(function () {
+                        
+                // USUÁRIOS
                 Route::get('/usuarios', [AdminUsuarioController::class, 'index'])
                     ->name('admin.usuarios.index');
 
@@ -147,6 +148,13 @@ Route::prefix('admin')->group(function () {
 
                 Route::get('/usuarios/{id}/logs', [AdminUsuarioController::class, 'logs'])
                     ->name('admin.usuarios.logs');
+
+                // CONFIGURAÇÕES         
+                Route::get('/configuracoes', [AdminConfiguracaoController::class, 'edit'])
+                    ->name('admin.configuracoes.edit');
+
+                Route::post('/configuracoes', [AdminConfiguracaoController::class, 'update'])
+                    ->name('admin.configuracoes.update');
 
             });
 
