@@ -23,9 +23,9 @@
     </div>
 
     <div class="mb-3">
-      <label class="form-label">Descrição</label>
-      <textarea name="descricao" class="form-control" rows="5"
-                required><?php echo old('descricao'); ?></textarea>
+      <label class="form-label">Descrição</label>      
+      <input type="hidden" name="descricao" value="<?php echo old('descricao'); ?>">
+      <div class="quill-editor"data-input="descricao" style="height: 220px;"></div>
     </div>
 
     <div class="mb-3">

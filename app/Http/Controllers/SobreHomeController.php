@@ -63,7 +63,7 @@ class SobreHomeController extends Controller
         ]);
 
         $title = $this->clean($request->input('title'));
-        $text  = $this->clean($request->input('text'));      
+        $text  = $request->input('text');      
        
         $rows = DB::select("SELECT id FROM sobre ORDER BY id ASC LIMIT 1");
         $id = isset($rows[0]) ? (int) $rows[0]->id : 0;

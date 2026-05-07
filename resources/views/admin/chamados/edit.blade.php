@@ -11,8 +11,8 @@
 
 <div class="container my-4">
   <div class="d-flex justify-content-between align-items-center mb-3">
-    <h1 class="h4 mb-0">Atender Chamado</h1>
-    <a class="btn btn-outline-secondary" href="{{ route('admin.chamados.index') }}">Voltar</a>
+    <h1 class="h4 mb-0">Atender Chamado #<?php echo $chamado->numero_chamado ? $chamado->numero_chamado : ('#'.$chamado->id); ?></h1>
+    <a class="btn btn-outline-secondary text-light" href="{{ route('admin.chamados.index') }}"><i class="bi bi-arrow-return-left"></i> Voltar</a>
   </div>
 
   <div class="glass-card">
@@ -35,9 +35,10 @@
           <input class="form-control" disabled value="<?php echo $chamado->tipo; ?>">
         </div>
 
-        <div class="col-12">
+        <div class="col-12" style="pointer-events: none; opacity: .8;">
           <label class="form-label">Descrição</label>
-          <textarea class="form-control" rows="4" disabled><?php echo $chamado->descricao; ?></textarea>
+            <input type="hidden" name="descricao" value="<?php echo $chamado->descricao; ?>">
+            <div class="quill-editor" data-input="descricao" style="height: 220px;"></div>
         </div>
 
         <div class="col-md-6">
@@ -73,7 +74,7 @@
             <?php if ($anexoPath !== '' && $anexoUrl !== '') { ?>
                 <div class="d-flex gap-2 align-items-center">
 
-                <a class="btn btn-sm btn-outline-secondary"
+                <a class="btn btn-sm btn-outline-secondary text-light"
                     target="_blank"
                     href="<?php echo $anexoUrl; ?>" download>
                     <i class="bi bi-download me-1"></i>Baixar
@@ -111,7 +112,8 @@
 
           <div class="col-12">
             <label class="form-label">Orientações</label>
-            <textarea name="orientacoes" class="form-control" rows="4" maxlength="5000"><?php echo $chamado->orientacoes; ?></textarea>
+            <input type="hidden" name="orientacoes" value="<?php echo $chamado->orientacoes; ?>">
+            <div class="quill-editor" data-input="orientacoes" style="height: 220px;"></div>
           </div>
         </div>
 
@@ -119,12 +121,13 @@
           <button type="submit" class="btn btn-primary">
             <i class="bi bi-check2-circle me-1"></i>Salvar atendimento
           </button>
-          <a class="btn btn-outline-secondary" href="{{ route('admin.chamados.index') }}">Cancelar</a>
+          <a class="btn btn-outline-secondary text-light" href="{{ route('admin.chamados.index') }}">Cancelar</a>
         </div>
       </form>
 
     </div>
   </div>
+</div>
 </div>
 
 @include('admin.partials.footer')

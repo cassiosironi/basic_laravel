@@ -2304,3 +2304,7 @@ a {
     height: 40px;
     object-fit: contain;
 }
+
+.ql-toolbar.ql-snow {
+    background: #fff;
+}

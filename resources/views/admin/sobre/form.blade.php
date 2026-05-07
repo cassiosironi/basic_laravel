@@ -46,7 +46,8 @@
 
 <div class="mb-3">
   <label class="form-label">Texto</label>
-  <textarea name="text" class="form-control" rows="5" maxlength="5000"><?php echo isset($sobre) ? $sobre->text : ''; ?></textarea>
+  <input type="hidden" name="text" value="<?php echo isset($sobre) ? $sobre->text : ''; ?>">
+  <div class="quill-editor" data-input="text" style="height: 220px;"></div>
 </div>
 
 <div class="d-flex gap-2">

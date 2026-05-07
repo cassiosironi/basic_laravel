@@ -76,7 +76,7 @@ class ChamadoController extends Controller
 
         // 5) Sanitização
         $titulo = $this->clean($request->input('titulo'));
-        $descricao = $this->clean($request->input('descricao'));
+        $descricao = $request->input('descricao');
         $tipo = $request->input('tipo');
 
         // 6) Upload do anexo (Storage)

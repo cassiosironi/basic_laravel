@@ -84,7 +84,7 @@ class AdminChamadoController extends Controller
         ]);
 
         $status = $request->input('status');
-        $orientacoes = $this->clean($request->input('orientacoes'));
+        $orientacoes = $request->input('orientacoes');
 
         // data_conclusao:
         // - se status = resolvido e data_conclusao vier vazia -> set CURRENT_TIMESTAMP
