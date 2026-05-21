@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use App\Support\Notifies;
 use App\Support\SanitizesInput;
 use App\Models\Usuario;
@@ -71,8 +72,9 @@ class AdminUsuarioController extends Controller
             $nome  = $this->clean($request->input('nome'));
             $login = $this->clean($request->input('login'));
             $nivel = $request->input('nivel');
-            $ativo = (int)$request->input('ativo');
-            $senha = md5($request->input('senha'));
+            $ativo = (int)$request->input('ativo');            
+            $senha = Hash::make($request->input('senha'));
+
 
             $affected = DB::insert("
                 INSERT INTO usuarios (nome, login, nivel, senha, ativo, created_at)
@@ -128,7 +130,7 @@ class AdminUsuarioController extends Controller
             $ativo = (int)$request->input('ativo');
 
             if ($request->filled('senha')) {
-                $senha = md5($request->input('senha'));
+                $senha = Hash::make($request->input('senha'));
 
                 $affected = DB::update("
                     UPDATE usuarios

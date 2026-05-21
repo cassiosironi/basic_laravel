@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use App\Support\Notifies;
 use App\Support\SanitizesInput;
 use App\Support\AntiBotCaptcha;
+use Illuminate\Support\Facades\Hash;
 use App\Models\Usuario;
 
 class AdminAuthController extends Controller
@@ -22,19 +23,19 @@ class AdminAuthController extends Controller
         ]);
 
     }
-
+   
     public function login(Request $request)
-    {        
-        // valida captcha + anti-bot
+    {
+        // captcha
         $captchaError = $this->captchaValidate($request, 'login_captcha', 3);
         if ($captchaError) {
             return redirect()
-            ->route('admin.login')
-            ->withInput()
-            ->with('notify', [
-                'type' => 'danger',
-                'message' => 'Captcha incorreto!'
-            ]);
+                ->route('admin.login')
+                ->withInput()
+                ->with('notify', [
+                    'type' => 'danger',
+                    'message' => $captchaError
+                ]);
         }
 
         $request->validate([
@@ -44,7 +45,7 @@ class AdminAuthController extends Controller
 
         try {
             $login = $this->clean($request->input('login'));
-            $senha = $this->clean($request->input('senha'));
+            $senhaInformada = (string) $request->input('senha'); // NÃO limpar com htmlspecialchars
 
             $rows = DB::select("
                 SELECT id, nome, login, nivel, senha, ativo
@@ -56,7 +57,7 @@ class AdminAuthController extends Controller
             $user = isset($rows[0]) ? $rows[0] : null;
 
             if (!$user) {
-                 return redirect()
+                return redirect()
                     ->route('admin.login')
                     ->withInput()
                     ->with('notify', [
@@ -65,8 +66,8 @@ class AdminAuthController extends Controller
                     ]);
             }
 
-            if ((int)$user->ativo !== 1) {
-                 return redirect()
+            if ((int) $user->ativo !== 1) {
+                return redirect()
                     ->route('admin.login')
                     ->withInput()
                     ->with('notify', [
@@ -75,11 +76,26 @@ class AdminAuthController extends Controller
                     ]);
             }
 
-            $senhaInformada = $senha;
-            $hash = md5($senhaInformada);
+            $hashDoBanco = (string) $user->senha;
 
-            if ($hash !== $user->senha) {
-                 return redirect()
+            // 1) Primeiro tenta Hash nativo do Laravel
+            $ok = Hash::check($senhaInformada, $hashDoBanco);
+
+            // 2) Fallback: se ainda estiver em MD5 (32 hex), valida em MD5 e migra para Hash
+            if (!$ok) {
+                $pareceMd5 = (bool) preg_match('/^[a-f0-9]{32}$/i', $hashDoBanco);
+                if ($pareceMd5 && md5($senhaInformada) === $hashDoBanco) {
+                    $ok = true;
+
+                    // Migra automaticamente para Hash forte
+                    DB::update("
+                        UPDATE usuarios SET senha = ? WHERE id = ?
+                    ", [Hash::make($senhaInformada), (int)$user->id]);
+                }
+            }
+
+            if (!$ok) {
+                return redirect()
                     ->route('admin.login')
                     ->withInput()
                     ->with('notify', [
@@ -88,22 +104,20 @@ class AdminAuthController extends Controller
                     ]);
             }
 
-            // Login OK: grava sessão
+            // Login OK
             $request->session()->regenerate();
 
             session([
                 'admin_user' => [
-                    'id'    => (int)$user->id,
-                    'nome'  => (string)$user->nome,
-                    'login' => (string)$user->login,
-                    'nivel' => (string)$user->nivel
+                    'id'    => (int) $user->id,
+                    'nome'  => (string) $user->nome,
+                    'login' => (string) $user->login,
+                    'nivel' => (string) $user->nivel
                 ],
-                // flag para o middleware registrar log 1x
                 'just_logged_in' => 1
             ]);
 
-           
-            // ✅ REGRA: se for CLIENT, redireciona para abertura de chamado
+            // client vai para abertura de chamado
             if ($user->nivel === 'client') {
                 return redirect()
                     ->route('site.chamados.create')
@@ -113,7 +127,6 @@ class AdminAuthController extends Controller
                     ]);
             }
 
-            // ✅ Admin / Editor seguem para o admin
             return redirect()
                 ->route('admin.index')
                 ->with('notify', [
@@ -121,18 +134,16 @@ class AdminAuthController extends Controller
                     'message' => 'Login realizado com sucesso.'
                 ]);
 
-
         } catch (\Throwable $e) {
             return $this->handleException('Erro inesperado no login.');
         }
     }
 
-
     public function editPassword()
     {
         return view('admin.perfil.senha');
     }
-
+    
     public function updatePassword(Request $request)
     {
         $request->validate([
@@ -143,7 +154,6 @@ class AdminAuthController extends Controller
         $user = session('admin_user');
         $userId = (int) $user['id'];
 
-        // busca senha atual no banco
         $rows = DB::select("
             SELECT senha
             FROM usuarios
@@ -152,7 +162,7 @@ class AdminAuthController extends Controller
         ", [$userId]);
 
         if (!isset($rows[0])) {
-             return redirect()
+            return redirect()
                 ->route('admin.perfil.senha')
                 ->with('notify', [
                     'type' => 'danger',
@@ -160,9 +170,21 @@ class AdminAuthController extends Controller
                 ]);
         }
 
-        // confere senha atual ***
-        if (md5($request->input('senha_atual')) !== $rows[0]->senha) {
-             return redirect()
+        $hashDoBanco = (string) $rows[0]->senha;
+        $senhaAtualInformada = (string) $request->input('senha_atual');
+
+        // aceita tanto Hash forte quanto MD5 (para transição)
+        $ok = Hash::check($senhaAtualInformada, $hashDoBanco);
+
+        if (!$ok) {
+            $pareceMd5 = (bool) preg_match('/^[a-f0-9]{32}$/i', $hashDoBanco);
+            if ($pareceMd5 && md5($senhaAtualInformada) === $hashDoBanco) {
+                $ok = true; // permite trocar mesmo se o banco ainda está em md5
+            }
+        }
+
+        if (!$ok) {
+            return redirect()
                 ->route('admin.perfil.senha')
                 ->with('notify', [
                     'type' => 'danger',
@@ -170,18 +192,17 @@ class AdminAuthController extends Controller
                 ]);
         }
 
-        // atualiza senha
         $affected = DB::update("
             UPDATE usuarios
             SET senha = ?
             WHERE id = ?
         ", [
-            md5($request->input('nova_senha')),
+            Hash::make((string) $request->input('nova_senha')),
             $userId
         ]);
 
         return $this->handleAffected(
-            $affected,
+            (int)$affected,
             'admin.index',
             'Senha alterada com sucesso!',
             'Erro ao alterar a senha.'
