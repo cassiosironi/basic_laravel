@@ -11,8 +11,13 @@
     
       <div class="collapse navbar-collapse">
           <ul class="navbar-nav ms-auto">
+            
+            <li class="nav-item">
+              <a class="nav-link" href="{{ route('site.blog.index') }}">
+                <i class="bi bi-journal-text me-1"></i>Blog
+              </a>
+            </li>
 
-            {{-- outros itens --}}
 
             <li class="nav-item">
                <a class="nav-link" href="{{ route('site.chamados.create') }}">

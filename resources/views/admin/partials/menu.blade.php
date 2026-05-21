@@ -37,6 +37,12 @@
                     </li>
                     
                     <li class="nav-item">
+                        <a class="nav-link" href="{{ route('admin.posts.index') }}">
+                        <i class="bi bi-journal-richtext"></i>Blog
+                        </a>
+                    </li>
+                    
+                    <li class="nav-item">
                         <a class="nav-link" href="{{ route('admin.chamados.index') }}">
                             <i class="bi bi-ticket-detailed"></i>Chamados
                         </a>

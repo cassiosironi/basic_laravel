@@ -9,6 +9,8 @@ use App\Http\Controllers\AdminUsuarioController;
 use App\Http\Controllers\ChamadoController;
 use App\Http\Controllers\AdminChamadoController;
 use App\Http\Controllers\AdminConfiguracaoController;
+use App\Http\Controllers\PostController;
+
 
 
 
@@ -32,6 +34,10 @@ Route::prefix('site')->group(function () {
         ->middleware('site.client')        
         ->middleware('throttle:10,1')
         ->name('site.chamados.store');
+    
+    Route::get('/blog', [PostController::class, 'siteIndex'])->name('site.blog.index');
+    Route::get('/blog/{slug}', [PostController::class, 'siteShow'])->name('site.blog.show');
+
 
 });
 
@@ -123,6 +129,17 @@ Route::prefix('admin')->group(function () {
                 Route::post('/sobre/update', [SobreHomeController::class, 'adminUpdate'])
                     ->name('admin.sobre.update');
             });
+
+            // BLOG → admin e editor
+            Route::middleware('admin.level:admin,editor')->group(function () {               
+                    Route::get('/posts', [PostController::class, 'adminIndex'])->name('admin.posts.index');
+                    Route::get('/posts/create', [PostController::class, 'adminCreate'])->name('admin.posts.create');
+                    Route::post('/posts/store', [PostController::class, 'adminStore'])->name('admin.posts.store');
+                    Route::get('/posts/{id}/edit', [PostController::class, 'adminEdit'])->name('admin.posts.edit');
+                    Route::post('/posts/{id}/update', [PostController::class, 'adminUpdate'])->name('admin.posts.update');
+                    Route::post('/posts/{id}/destroy', [PostController::class, 'adminDestroy'])->name('admin.posts.destroy');
+             });
+
 
             // → SOMENTE admin 
             Route::middleware(['admin.auth', 'admin.level:admin'])->group(function () {
